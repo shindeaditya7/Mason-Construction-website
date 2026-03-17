@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login – Mason Construction Services Inc.</title>
+  <!-- No-index: prevent search engines from indexing this page -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/admin-style.css">
+</head>
+<body class="login-page">
+
+  <div class="login-card">
+    <div class="login-logo">
+      <img src="../assets/images/mason logo.jpeg" alt="Mason Construction Logo">
+      <h2>Mason Construction</h2>
+      <p>Admin Portal – Authorized Access Only</p>
+    </div>
+
+    <div id="loginAlert" class="alert alert-danger" style="display:none;"></div>
+
+    <form id="loginForm" novalidate>
+      <div class="form-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" placeholder="Enter username"
+               autocomplete="username" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" placeholder="Enter password"
+               autocomplete="current-password" required>
+      </div>
+      <button type="submit" class="btn btn-primary" id="loginBtn">
+        Sign In
+      </button>
+    </form>
+
+    <p style="text-align:center;margin-top:20px;font-size:.8rem;color:#718096;">
+      &copy; 2025 Mason Construction Services Inc.
+    </p>
+  </div>
+
+  <script>
+    (function () {
+      var API = '../api/login.php';
+
+      // Redirect if already logged in
+      fetch('../api/get-contacts.php?limit=1', { credentials: 'include' })
+        .then(function (r) {
+          if (r.ok) window.location.replace('dashboard.html');
+        })
+        .catch(function () {});
+
+      var form     = document.getElementById('loginForm');
+      var alertBox = document.getElementById('loginAlert');
+      var btn      = document.getElementById('loginBtn');
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        alertBox.style.display = 'none';
+
+        var username = document.getElementById('username').value.trim();
+        var password = document.getElementById('password').value;
+
+        if (!username || !password) {
+          showAlert('Please enter your username and password.');
+          return;
+        }
+
+        btn.disabled     = true;
+        btn.innerHTML    = '<span class="spinner"></span> Signing in…';
+
+        fetch(API, {
+          method:      'POST',
+          headers:     { 'Content-Type': 'application/json' },
+          body:        JSON.stringify({ username: username, password: password }),
+          credentials: 'include',
+        })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (data.success) {
+              window.location.replace('dashboard.html');
+            } else {
+              showAlert(data.message || 'Invalid credentials. Please try again.');
+              btn.disabled  = false;
+              btn.innerHTML = 'Sign In';
+            }
+          })
+          .catch(function () {
+            showAlert('Connection error. Please try again.');
+            btn.disabled  = false;
+            btn.innerHTML = 'Sign In';
+          });
+      });
+
+      function showAlert(msg) {
+        alertBox.textContent    = msg;
+        alertBox.style.display  = 'block';
+      }
+    })();
+  </script>
+
+</body>
+</html>
