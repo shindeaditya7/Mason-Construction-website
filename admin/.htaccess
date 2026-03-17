@@ -1,0 +1,9 @@
+# Mason Construction Admin Area – Access Control
+# Prevents directory listing and blocks PHP execution from being directly accessed
+
+Options -Indexes
+
+# Deny access to the admin area from robots/crawlers via server-side headers
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow"
+</IfModule>

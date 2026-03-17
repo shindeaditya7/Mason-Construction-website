@@ -1,0 +1,14 @@
+# Mason Construction API – Security hardening
+Options -Indexes
+
+# Block access to log files
+<FilesMatch "\.log$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>
+
+# Block access to config file directly
+<FilesMatch "^config\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

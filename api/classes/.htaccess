@@ -1,0 +1,8 @@
+# Mason Construction API – Deny directory listing
+Options -Indexes
+
+# Block direct browser access to class files
+<FilesMatch "^(Database|Contact|Admin)\.php$">
+    Order Allow,Deny
+    Deny from all
+</FilesMatch>

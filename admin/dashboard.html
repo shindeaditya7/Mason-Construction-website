@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard – Mason Construction Admin</title>
+  <!-- No-index: prevent search engines from indexing this page -->
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="stylesheet" href="css/admin-style.css">
+  <!-- Chart.js for analytics charts -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="admin-layout">
+
+  <!-- ── Sidebar ────────────────────────────────────────────────── -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-brand">
+      <img src="../assets/images/mason logo.jpeg" alt="Logo">
+      <span>Mason<br>Construction</span>
+    </div>
+
+    <nav class="sidebar-nav">
+      <ul>
+        <li>
+          <a href="#" class="active" data-section="dashboard">
+            <span class="icon">📊</span> Dashboard
+          </a>
+        </li>
+        <li>
+          <a href="#" data-section="contacts">
+            <span class="icon">📬</span> Contact Submissions
+            <span id="newBadge" style="margin-left:auto;background:#e94560;color:#fff;font-size:.7rem;padding:2px 7px;border-radius:10px;display:none;"></span>
+          </a>
+        </li>
+        <li>
+          <a href="#" data-section="analytics">
+            <span class="icon">📈</span> Analytics
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a href="../index.html" target="_blank">← View Website</a>
+    </div>
+  </aside>
+
+  <!-- ── Main ───────────────────────────────────────────────────── -->
+  <div class="main-content">
+
+    <!-- Top bar -->
+    <header class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="mobile-menu-btn" id="mobileMenuBtn">☰</button>
+        <div class="topbar-left">
+          <h1 id="pageTitle">Dashboard</h1>
+          <p id="pageDate"></p>
+        </div>
+      </div>
+      <div class="topbar-right">
+        <div class="admin-info">
+          <strong id="adminName">Admin</strong>
+          <small id="adminUsername"></small>
+        </div>
+        <div class="admin-avatar" id="adminAvatar">A</div>
+        <button class="btn btn-secondary btn-sm" id="logoutBtn">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- Page body -->
+    <main class="page-body">
+
+      <!-- ── Dashboard section ────────────────────────────────── -->
+      <section id="section-dashboard">
+        <div class="stats-grid">
+          <div class="stat-card blue">
+            <div class="stat-icon">📬</div>
+            <div class="stat-info">
+              <h3 id="statTotal">–</h3>
+              <p>Total Submissions</p>
+            </div>
+          </div>
+          <div class="stat-card red">
+            <div class="stat-icon">🔴</div>
+            <div class="stat-info">
+              <h3 id="statNew">–</h3>
+              <p>New (Unread)</p>
+            </div>
+          </div>
+          <div class="stat-card orange">
+            <div class="stat-icon">🔄</div>
+            <div class="stat-info">
+              <h3 id="statInProgress">–</h3>
+              <p>In Progress</p>
+            </div>
+          </div>
+          <div class="stat-card green">
+            <div class="stat-icon">✅</div>
+            <div class="stat-info">
+              <h3 id="statResolved">–</h3>
+              <p>Resolved</p>
+            </div>
+          </div>
+          <div class="stat-card purple">
+            <div class="stat-icon">🚫</div>
+            <div class="stat-info">
+              <h3 id="statSpam">–</h3>
+              <p>Spam</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent submissions -->
+        <div class="card">
+          <div class="card-header">
+            <h4>Recent Submissions</h4>
+            <button class="btn btn-secondary btn-sm" onclick="showSection('contacts')">View All →</button>
+          </div>
+          <div class="card-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="recentTableBody">
+                <tr class="loading-row"><td colspan="6">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Contacts section ─────────────────────────────────── -->
+      <section id="section-contacts" style="display:none;">
+        <div class="card">
+          <div class="card-header">
+            <h4>All Contact Submissions</h4>
+            <div class="card-filters">
+              <input type="search" id="searchInput" placeholder="Search name / email…">
+              <select id="statusFilter">
+                <option value="">All Statuses</option>
+                <option value="new">New</option>
+                <option value="read">Read</option>
+                <option value="in_progress">In Progress</option>
+                <option value="resolved">Resolved</option>
+                <option value="spam">Spam</option>
+              </select>
+              <button class="btn btn-secondary btn-sm" id="refreshBtn">⟳ Refresh</button>
+            </div>
+          </div>
+          <div class="card-body">
+            <table>
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="contactsTableBody">
+                <tr class="loading-row"><td colspan="8">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="pagination">
+            <span id="paginationInfo">–</span>
+            <div class="pagination-btns" id="paginationBtns"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ── Analytics section ────────────────────────────────── -->
+      <section id="section-analytics" style="display:none;">
+        <div class="charts-grid">
+          <div class="chart-card">
+            <h4>Submissions – Last 30 Days</h4>
+            <canvas id="dailyChart" height="220"></canvas>
+          </div>
+          <div class="chart-card">
+            <h4>Status Breakdown</h4>
+            <canvas id="statusChart" height="220"></canvas>
+          </div>
+          <div class="chart-card" style="grid-column:1/-1;">
+            <h4>Monthly Submissions (12 months)</h4>
+            <canvas id="monthlyChart" height="180"></canvas>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div><!-- /main-content -->
+
+</div><!-- /admin-layout -->
+
+<!-- ── Contact Detail Modal ──────────────────────────────────────── -->
+<div class="modal-overlay" id="contactModal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Contact Details</h3>
+      <button class="modal-close" id="modalClose">✕</button>
+    </div>
+    <div class="modal-body" id="modalBody">
+      <!-- filled by JS -->
+    </div>
+    <div class="modal-footer" id="modalFooter">
+      <!-- filled by JS -->
+    </div>
+  </div>
+</div>
+
+<!-- ── Toast container ────────────────────────────────────────────── -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Dashboard Script -->
+<script src="js/admin-script.js"></script>
+
+</body>
+</html>
