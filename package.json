@@ -1,0 +1,25 @@
+{
+  "name": "mason-construction-website",
+  "version": "1.0.0",
+  "description": "Mason Construction Services Inc – static website for NYC masonry and general contracting services.",
+  "private": true,
+  "scripts": {
+    "build:css": "cleancss -o css/styles.min.css css/styles.css",
+    "build": "npm run build:css",
+    "start": "npx serve .",
+    "dev": "npx live-server ."
+  },
+  "devDependencies": {
+    "clean-css-cli": "^5.6.3",
+    "live-server": "^1.2.2",
+    "serve": "^14.2.3"
+  },
+  "keywords": [
+    "construction",
+    "masonry",
+    "nyc",
+    "static-website"
+  ],
+  "author": "Mason Construction Services Inc",
+  "license": "ISC"
+}
