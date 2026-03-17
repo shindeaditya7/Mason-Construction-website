@@ -10,6 +10,9 @@
     rel="stylesheet">
   <!-- Template CSS -->
   <link rel="stylesheet" href="assets/css/style-liberty.css">
+  <style>
+    .form-error { color: #e74c3c; font-size: 0.85em; display: none; }
+  </style>
 </head>
 
 <body>
@@ -21,7 +24,7 @@
         <!-- <span class="sub-log"> </span>  -->
         <!-- Mason construction Services Inc.</a></h1> -->
         <!-- if logo is image enable this    -->
-        <a class="navbar-brand" href="#index.html">
+        <a class="navbar-brand" href="index.html">
           <img src="./assets/images/mason logo.jpeg" alt="Your logo" title="Your logo" style="height:80px;" />
         </a>
         <button class="navbar-toggler  collapsed bg-gradient" type="button" data-toggle="collapse"
@@ -94,10 +97,13 @@
         <div class="container">
           <div class="d-grid align-form-map">
             <div class="form-inner-cont">
-              <form action="https://formspree.io/f/xnnvjoyy" method="POST">
-                <input type="text" name="w3lName" placeholder="Name" />
-                <input type="email" name="w3lSender" placeholder="Email" required />
-                <textarea name="w3lMessage" placeholder="Message" required></textarea>
+              <form id="contactForm" action="https://formspree.io/f/xnnvjoyy" method="POST" novalidate>
+                <input type="text" id="w3lName" name="w3lName" placeholder="Name" required minlength="2" maxlength="100" />
+                <span class="form-error" id="nameError">Please enter your name (at least 2 characters).</span>
+                <input type="email" id="w3lSender" name="w3lSender" placeholder="Email" required />
+                <span class="form-error" id="emailError">Please enter a valid email address.</span>
+                <textarea id="w3lMessage" name="w3lMessage" placeholder="Message" required minlength="10"></textarea>
+                <span class="form-error" id="messageError">Please enter a message (at least 10 characters).</span>
                 <button type="submit">Submit Message</button>
               </form>
             </div>
@@ -363,6 +369,64 @@
   <!--//MENU-JS-->
 
   <script src="assets/js/bootstrap.min.js"></script>
+
+  <!-- Contact Form Validation -->
+  <script>
+    (function () {
+      var form = document.getElementById('contactForm');
+      if (!form) return;
+
+      function showError(id, show) {
+        var el = document.getElementById(id);
+        if (el) el.style.display = show ? 'block' : 'none';
+      }
+
+      function validateEmail(email) {
+        return /^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(email);
+      }
+
+      form.addEventListener('submit', function (e) {
+        var name = document.getElementById('w3lName').value.trim();
+        var email = document.getElementById('w3lSender').value.trim();
+        var message = document.getElementById('w3lMessage').value.trim();
+        var valid = true;
+
+        if (name.length < 2) {
+          showError('nameError', true);
+          valid = false;
+        } else {
+          showError('nameError', false);
+        }
+
+        if (!validateEmail(email)) {
+          showError('emailError', true);
+          valid = false;
+        } else {
+          showError('emailError', false);
+        }
+
+        if (message.length < 10) {
+          showError('messageError', true);
+          valid = false;
+        } else {
+          showError('messageError', false);
+        }
+
+        if (!valid) e.preventDefault();
+      });
+
+      // Real-time validation on blur
+      document.getElementById('w3lName').addEventListener('blur', function () {
+        showError('nameError', this.value.trim().length < 2);
+      });
+      document.getElementById('w3lSender').addEventListener('blur', function () {
+        showError('emailError', !validateEmail(this.value.trim()));
+      });
+      document.getElementById('w3lMessage').addEventListener('blur', function () {
+        showError('messageError', this.value.trim().length < 10);
+      });
+    })();
+  </script>
 
 </body>
 
