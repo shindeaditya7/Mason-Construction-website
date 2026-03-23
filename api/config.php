@@ -10,9 +10,9 @@
 // For added security, consider setting these via cPanel's PHP config or
 // a non-web-accessible include file outside the public_html directory.
 define('DB_HOST', getenv('DB_HOST') ?: 'localhost');
-define('DB_NAME', getenv('DB_NAME') ?: 'thematg5_mason_db');
-define('DB_USER', getenv('DB_USER') ?: 'thematg5_Jitesh');
-define('DB_PASS', getenv('DB_PASS') ?: 'Jitesh@16!');
+define('DB_NAME', getenv('DB_NAME') ?: 'thematg5_mason_admin');
+define('DB_USER', getenv('DB_USER') ?: 'thematg5_usman');
+define('DB_PASS', getenv('DB_PASS') ?: 'Jiteshgadage@16');
 define('DB_CHARSET', 'utf8mb4');
 
 // Application settings
